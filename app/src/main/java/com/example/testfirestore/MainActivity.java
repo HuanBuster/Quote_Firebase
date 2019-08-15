@@ -11,12 +11,18 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 
+import java.lang.ref.Reference;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,11 +36,17 @@ public class MainActivity extends AppCompatActivity {
 
     TextView mQuoteTextView;
 
+    FirebaseFirestore db;
+
     private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("sampleData/inspiration");
+    private DocumentReference mTestRef = FirebaseFirestore.getInstance().document("newData/test");
+    private DocumentReference mNewRef = FirebaseFirestore.getInstance().document("newData/newDoc");
+    private CollectionReference mAddRef = FirebaseFirestore.getInstance().collection("newData");
 
     @Override
     protected void onStart(){
         super.onStart();
+        // Automatically fetch Quote
         mDocRef.addSnapshotListener(this ,new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -81,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Map<String, Object>dataToSave = new HashMap<String, Object>();
-        dataToSave.put(QUOTE_KEY, quoteText);
         dataToSave.put(AUTHOR_KEY, authorText);
+        dataToSave.put(QUOTE_KEY, quoteText);
         mDocRef.set(dataToSave).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -94,5 +106,76 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Document was not saved", e);
             }
         });
+
+    }
+
+    public void pushInfo(View view){
+        mQuoteTextView.setText("button is pushed");
+        Map<String, Object> city = new HashMap<>();
+        city.put("name", "Los Angeles");
+        city.put("state", "CA");
+        city.put("country", "USA");
+        mTestRef.set(city).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("test", "Push is successfull");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("test", "Push is failed");
+            }
+        });
+    }
+
+    public void Update(View view){
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("stringExample", "Hello world!");
+        docData.put("booleanExample", true);
+        docData.put("numberExample", 3.14159265);
+        docData.put("dateExample", new Timestamp(new Date()));
+        docData.put("listExample", Arrays.asList(1, 2, 3));
+        docData.put("nullExample", null);
+
+        Map<String, Object> nestedData = new HashMap<>();
+        nestedData.put("a", 5);
+        nestedData.put("b", true);
+
+        docData.put("objectExample", nestedData);
+
+        mNewRef.set(docData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
+
+    public void add(View view){
+        // Add a new document with a generated id.
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "Tokyo");
+        data.put("country", "Japan");
+
+        mAddRef.add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
     }
 }
