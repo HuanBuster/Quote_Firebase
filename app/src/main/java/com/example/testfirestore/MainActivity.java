@@ -3,9 +3,11 @@ package com.example.testfirestore;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -67,6 +69,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mQuoteTextView = (TextView) findViewById(R.id.textViewInspiring);
+        Button runBtn = findViewById(R.id.buttonTest);
+        runBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Button is clicked");
+                Intent activity2Intent = new Intent(MainActivity.this, Activity2.class);
+                startActivity(activity2Intent);
+
+            }
+        });
     }
 
     public void fetchQuote(View view){
@@ -178,4 +190,28 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+// this method will enable user to edit information
+    public void editData(View view){
+        mTestRef.update("new", "abc")
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+    //Example
+/*
+    public void example(View view){
+        System.out.println("Button Clicked");
+        Intent activity2Intent = new Intent(getApplicationContext(), Activity2.class);
+        startActivity(activity2Intent);
+    }
+*/
 }
