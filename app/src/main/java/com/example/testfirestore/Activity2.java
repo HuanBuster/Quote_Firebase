@@ -1,5 +1,6 @@
 package com.example.testfirestore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +37,7 @@ public class Activity2 extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.run_test);
-        mInfo = (TextView) findViewById(R.id.textViewFetch);
+        //mInfo = (TextView) findViewById(R.id.textViewFetch);
     }
 
     public void addContact(View view){
@@ -75,8 +76,8 @@ public class Activity2 extends MainActivity {
             }
         });
     }
- /*   public void fetchContact(View view){
-        mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+   public void fetchContact(View view){
+  /*      mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -93,7 +94,11 @@ public class Activity2 extends MainActivity {
                      Log.d("contact", "get failed with", task.getException());
                     }
                 }
-        });
+        });*/
+  //----------------------------------------------------------
+       System.out.println("Running");
+       Intent runIntent = new Intent(getApplicationContext(), ContactActivity.class);
+       startActivity(runIntent);
     }
-    */
+
 }

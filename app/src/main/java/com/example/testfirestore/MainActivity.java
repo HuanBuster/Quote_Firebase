@@ -207,11 +207,11 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
     //Example
-/*
+
     public void example(View view){
         System.out.println("Button Clicked");
         Intent activity2Intent = new Intent(getApplicationContext(), Activity2.class);
         startActivity(activity2Intent);
     }
-*/
+
 }
