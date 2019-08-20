@@ -1,6 +1,7 @@
 package com.example.testfirestore;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.adapter_view, null);
+        View view = inflater.inflate(R.layout.adapter_view, parent, false);
         return new ContactViewHolder(view);
     }
 
@@ -43,14 +44,27 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         return contactList.size();
     }
 
-    class ContactViewHolder extends RecyclerView.ViewHolder{
+    class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView textViewName, textViewSip;
 
-        public ContactViewHolder(@NonNull View itemView) {
+        public ContactViewHolder(View itemView) {
             super(itemView);
+
             textViewName = itemView.findViewById(R.id.textView_ConName);
             textViewSip = itemView.findViewById(R.id.textView_ConSip);
+
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            Contact contact = contactList.get(getAdapterPosition());
+            Intent intent = new Intent(mCtx, DetailActivity.class);
+            intent.putExtra("contact", contact);
+            mCtx.startActivity(intent);
         }
     }
+
 }

@@ -52,6 +52,7 @@ public class ContactActivity extends AppCompatActivity {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list){
                                 Contact p = d.toObject(Contact.class);
+                                p.setId(d.getId());
                                 contactList.add(p);
                             }
                             adapter.notifyDataSetChanged();
